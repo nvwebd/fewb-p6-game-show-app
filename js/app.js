@@ -11,6 +11,22 @@ const addPhraseToDisplay = (phraseChars) => {
   });
 };
 
+const checkLetter = (selectedLetter) => {
+  const selectedLetterValue = selectedLetter.textContext;
+  const letterElements = document.querySelectorAll(`.letter`);
+  // store the seletedLetter somewhere
+  
+  console.log('letterElements: ', letterElements);
+  
+  letterElements.forEach(letterElement => {
+    if (selectedLetterValue === letterElement.textContext) {
+      return letterElement;
+    } else {
+      return null;
+    }
+  })
+};
+
 const app = () => {
   const qwerty = document.getElementById('qwerty');
   const phrase = document.getElementById('phrase');
@@ -22,11 +38,17 @@ const app = () => {
   const selectedPhrase = getRandomPhraseAsArray(phrases);
   addPhraseToDisplay(selectedPhrase);
   
-  console.log('selectedPhrase: ', selectedPhrase)
-  
   startButton.addEventListener('click', () => {
     const startOverlay = document.querySelector('#overlay');
     startOverlay.style.display = 'none';
+  });
+  
+  qwerty.addEventListener('click', (event) => {
+    if (event.target.tagName === 'BUTTON') {
+      event.target.classList.add('chosen');
+      event.target.disabled = true;
+      checkLetter(event.target);
+    }
   });
 };
 
