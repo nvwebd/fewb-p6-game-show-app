@@ -44,6 +44,7 @@ const checkWin = (showLetters, letters, misses, overlayContainer) => {
 const app = () => {
   let misses = 0;
   let letterFound;
+  let winLoseState = false;
   
   const overlayContainer = document.querySelector('#overlay');
   
@@ -57,7 +58,8 @@ const app = () => {
   const selectedPhrase = getRandomPhraseAsArray(phrases);
   addPhraseToDisplay(selectedPhrase);
   
-  startButton.addEventListener('click', () => {
+  startButton.addEventListener('click', (event) => {
+    event.target.textContent = 'Reset';
     overlayContainer.classList.remove('start');
     overlayContainer.style.display = 'none';
   });
