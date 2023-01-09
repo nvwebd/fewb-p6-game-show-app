@@ -5,6 +5,7 @@ const getRandomPhraseAsArray = (inputPhrases) => {
 
 const addPhraseToDisplay = (phraseChars) => {
   const phraseList = document.querySelector('#phrase ul');
+  phraseList.innerHTML = '';
   
   phraseChars.forEach(phraseChar => {
     phraseList.insertAdjacentHTML('beforeend', `<li class=${phraseChar !== ' ' ? 'letter' : null}>${phraseChar}</li>`)
@@ -41,24 +42,43 @@ const checkWin = (showLetters, letters, misses, overlayContainer) => {
   }
 }
 
+const setUpRandomPhrase = (phrases) => {
+  const selectedPhrase = getRandomPhraseAsArray(phrases);
+  addPhraseToDisplay(selectedPhrase);
+}
+
 const app = () => {
+  const phrases = ['run into the ground', 'catch the sun', 'over and over', 'pack away', 'loud and clear'];
   let misses = 0;
   let letterFound;
-  let winLoseState = false;
   
   const overlayContainer = document.querySelector('#overlay');
-  
   const qwerty = document.querySelector('#qwerty');
   const phrase = document.querySelector('#phrase');
   const tries = document.querySelectorAll('.tries');
   
   const startButton = document.querySelector('.btn__reset');
-  const phrases = ['run into the ground', 'catch the sun', 'over and over', 'pack away', 'loud and clear'];
-  
-  const selectedPhrase = getRandomPhraseAsArray(phrases);
-  addPhraseToDisplay(selectedPhrase);
   
   startButton.addEventListener('click', (event) => {
+    qwerty.childNodes.forEach(keyrow => {
+      keyrow.childNodes.forEach(charButton => {
+        if (charButton.nodeType === 1) {
+          charButton.classList.remove('chosen');
+          charButton.removeAttribute('disabled');
+        }
+      });
+    });
+    
+    setUpRandomPhrase(phrases);
+    
+    misses = 0;
+  
+    tries.forEach(scoreTry => {
+      if (misses !== 0) {
+        scoreTry.firstChild.src = 'images/liveHeart.png'
+      }
+    });
+    
     event.target.textContent = 'Reset';
     overlayContainer.classList.remove('start');
     overlayContainer.style.display = 'none';
@@ -75,14 +95,11 @@ const app = () => {
         tries[misses].firstChild.src = 'images/lostHeart.png'
         misses++;
       }
-  
+      
       const showLetters = document.querySelectorAll('.show').length;
       const letters = document.querySelectorAll('.letters').length;
-  
-      console.log('showLetters: ', showLetters);
-      console.log('letters: ', letters);
       
-      checkWin(showLetters, letters, misses,  overlayContainer);
+      checkWin(showLetters, letters, misses, overlayContainer);
     }
   });
 };
