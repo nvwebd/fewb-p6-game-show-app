@@ -8,7 +8,7 @@ const addPhraseToDisplay = (phraseChars) => {
   phraseList.innerHTML = '';
   
   phraseChars.forEach(phraseChar => {
-    phraseList.insertAdjacentHTML('beforeend', `<li class=${phraseChar !== ' ' ? 'letter' : null}>${phraseChar}</li>`)
+    phraseList.insertAdjacentHTML('beforeend', `<li class=${phraseChar !== ' ' ? 'letter' : 'space'}>${phraseChar}</li>`)
   });
 };
 
@@ -31,12 +31,14 @@ const checkLetter = (selectedLetter) => {
 const checkWin = (showLetters, letters, misses, overlayContainer) => {
   if (misses >= 5) {
     overlayContainer.style.display = 'flex';
+    overlayContainer.classList.remove('win');
     overlayContainer.classList.add('lose');
   }
   
   if (showLetters !== 0 && letters !== 0) {
     if (showLetters === letters) {
       overlayContainer.style.display = 'flex';
+      overlayContainer.classList.remove('lose');
       overlayContainer.classList.add('win');
     }
   }
@@ -74,9 +76,7 @@ const app = () => {
     misses = 0;
   
     tries.forEach(scoreTry => {
-      if (misses !== 0) {
-        scoreTry.firstChild.src = 'images/liveHeart.png'
-      }
+      scoreTry.firstChild.src = 'images/liveHeart.png'
     });
     
     event.target.textContent = 'Reset';
@@ -97,7 +97,7 @@ const app = () => {
       }
       
       const showLetters = document.querySelectorAll('.show').length;
-      const letters = document.querySelectorAll('.letters').length;
+      const letters = document.querySelectorAll('.letter').length;
       
       checkWin(showLetters, letters, misses, overlayContainer);
     }
